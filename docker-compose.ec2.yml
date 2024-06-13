@@ -1,4 +1,4 @@
 services:
   frontend:
     environment:
-      REACT_APP_API_BASE_URL: http://54.249.198.162
+      REACT_APP_API_BASE_URL: http://176.34.9.203
