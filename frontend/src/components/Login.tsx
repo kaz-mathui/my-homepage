@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import axios from 'axios'
@@ -6,8 +6,14 @@ import axios from 'axios'
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const { login } = useAuth()
+  const { isLoggedIn, login } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/')
+    }
+  }, [isLoggedIn, navigate])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
