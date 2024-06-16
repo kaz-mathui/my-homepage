@@ -6,7 +6,7 @@ const Home: React.FC = () => {
       <header className='App-header'>
         <h1>ホームページ</h1>
       </header>
-      <main>welcome!!</main>
+      <main>welcome!!!</main>
     </div>
   )
 }
