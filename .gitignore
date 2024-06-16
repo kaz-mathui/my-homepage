@@ -23,3 +23,4 @@
 /frontend/yarn-error.log*
 
 .env
+docker-compose.ec2.yml
