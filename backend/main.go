@@ -80,5 +80,5 @@ func main() {
 
     r.POST("/api/register", handlers.RegisterHandler)
 
-    r.Run() // デフォルトで :8080 で実行されます
+    r.Run()
 }
