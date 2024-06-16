@@ -1,20 +1,20 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
-    "os"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
 
-    "github.com/gin-contrib/cors"
-    "github.com/gin-gonic/gin"
-    _ "github.com/lib/pq"
-    "github.com/jmoiron/sqlx"
-    "gorm.io/driver/postgres"
-    "gorm.io/gorm"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
-    "backend/handlers"
-    "backend/models"
+	"backend/handlers"
+	"backend/models"
 )
 
 var db *sqlx.DB
@@ -79,6 +79,7 @@ func main() {
     })
 
     r.POST("/api/register", handlers.RegisterHandler)
+    r.POST("/api/login", handlers.LoginHandler)
 
     r.Run()
 }

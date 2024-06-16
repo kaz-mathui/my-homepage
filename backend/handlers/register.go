@@ -1,31 +1,42 @@
 package handlers
 
 import (
-    "backend/models"
-    "net/http"
-    "github.com/gin-gonic/gin"
-    "golang.org/x/crypto/bcrypt"
+	"backend/models"
+	"log"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func RegisterHandler(c *gin.Context) {
-    var user models.User
-    if err := c.ShouldBindJSON(&user); err != nil {
+    var registerDetails struct {
+        Username string `json:"username"`
+        Password string `json:"password"`
+    }
+    if err := c.ShouldBindJSON(&registerDetails); err != nil {
+        log.Println("Invalid input:", err)
         c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
         return
     }
 
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(registerDetails.Password), bcrypt.DefaultCost)
     if err != nil {
-		print("tanaka")
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})
-        return
-    }
-    user.Password = string(hashedPassword)
-
-    if result := models.DB.Create(&user); result.Error != nil {
-        c.JSON(http.StatusConflict, gin.H{"error": "Username already exists"})
+        log.Println("Could not hash password:", err)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not hash password"})
         return
     }
 
-    c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
+    user := models.User{
+        Username: registerDetails.Username,
+        Password: string(hashedPassword),
+    }
+
+    if err := models.DB.Create(&user).Error; err != nil {
+        log.Println("Could not create user:", err)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create user"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
 }
