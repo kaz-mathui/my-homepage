@@ -3,8 +3,7 @@ import api from '../api'
 
 interface User {
   id: number
-  name: string
-  email: string
+  username: string
 }
 
 const Kaz: React.FC = () => {
@@ -29,7 +28,7 @@ const Kaz: React.FC = () => {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            {user.name} ({user.email})
+            {user.username} 
           </li>
         ))}
       </ul>
