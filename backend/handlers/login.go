@@ -1,6 +1,7 @@
 package handlers
 
 import (
+    "backend/database"
     "backend/models"
     "net/http"
     "os"
@@ -38,7 +39,7 @@ func LoginHandler(c *gin.Context) {
     }
 
     var user models.User
-    if err := models.DB.Where("username = ?", loginDetails.Username).First(&user).Error; err != nil {
+    if err := database.DB.Where("username = ?", loginDetails.Username).First(&user).Error; err != nil {
         log.Println("Invalid username or password: ", err)
         c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
         return

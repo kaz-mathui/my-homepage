@@ -1,12 +1,12 @@
 import React from 'react'
 import { AuthProvider } from './context/AuthContext'
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './components/Home'
 import About from './components/About'
 import Kaz from './components/Kaz'
 import Register from './components/Register'
 import Login from './components/Login'
+import Todo from './components/Todo'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -22,6 +22,7 @@ function App() {
             <Route path='/kaz' element={<Kaz />} />
             <Route path='/register' element={<Register />} />
             <Route path='/login' element={<Login />} />
+            <Route path='/todo' element={<Todo />} />
           </Routes>
         </div>
       </Router>
