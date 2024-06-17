@@ -7,12 +7,15 @@ import About from './components/About'
 import Kaz from './components/Kaz'
 import Register from './components/Register'
 import Login from './components/Login'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div>
+          <ToastContainer />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/about' element={<About />} />
