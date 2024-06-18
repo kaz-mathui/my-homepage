@@ -3,10 +3,12 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"backend/database"
 	"backend/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetTodos(c *gin.Context) {
@@ -33,7 +35,14 @@ func CreateTodo(c *gin.Context) {
 
 func ToggleTodoCompletion(c *gin.Context) {
 	var todo models.Todo
-	id := c.Param("id")
+	idParam := c.Param("id")
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
 	if err := database.DB.First(&todo, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
 		return

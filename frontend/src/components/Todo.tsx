@@ -8,6 +8,7 @@ const Todo: React.FC = () => {
 
   useEffect(() => {
     axios.get<TodoType[]>('/api/todos').then((response) => {
+      console.log('Fetched todos:', response.data) // 取得したデータをログ出力
       setTodos(response.data)
     })
   }, [])
@@ -21,16 +22,17 @@ const Todo: React.FC = () => {
       })
   }
 
-  const toggleTodo = (id: number) => {
-    const todo = todos.find((todo) => todo.id === id)
+  const toggleTodo = (ID: number) => {
+    console.log(`Toggling todo with id: ${ID}`) // ここでidをログに出力
+    const todo = todos.find((todo) => todo.ID === ID)
     if (todo) {
       axios
-        .put<TodoType>(`/api/todos/${id}`, {
+        .put<TodoType>(`/api/todos/${ID}`, {
           ...todo,
           completed: !todo.completed
         })
         .then((response) => {
-          setTodos(todos.map((t) => (t.id === id ? response.data : t)))
+          setTodos(todos.map((t) => (t.ID === ID ? response.data : t)))
         })
     }
   }
@@ -45,20 +47,23 @@ const Todo: React.FC = () => {
       />
       <button onClick={addTodo}>Add</button>
       <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <span
-              style={{
-                textDecoration: todo.completed ? 'line-through' : 'none'
-              }}
-            >
-              {todo.task}
-            </span>
-            <button onClick={() => toggleTodo(todo.id)}>
-              {todo.completed ? 'Undo' : 'Complete'}
-            </button>
-          </li>
-        ))}
+        {todos.map((todo) => {
+          console.log('Rendering todo:', todo.ID) // 各todoアイテムをログ出力
+          return (
+            <li key={todo.ID}>
+              <span
+                style={{
+                  textDecoration: todo.completed ? 'line-through' : 'none'
+                }}
+              >
+                {todo.task}
+              </span>
+              <button onClick={() => toggleTodo(todo.ID)}>
+                {todo.completed ? 'Undo' : 'Complete'}
+              </button>
+            </li>
+          )
+        })}
       </ul>
     </div>
   )
