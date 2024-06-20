@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { TodoType } from '../types/Todo'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const Todo: React.FC = () => {
   const [todos, setTodos] = useState<TodoType[]>([])
   const [task, setTask] = useState('')
+  const { isLoggedIn } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    axios.get<TodoType[]>('/api/todos').then((response) => {
-      console.log('Fetched todos:', response.data) // 取得したデータをログ出力
-      setTodos(response.data)
-    })
-  }, [])
+    if (!isLoggedIn) {
+      navigate('/login')
+    } else {
+      axios.get<TodoType[]>('/api/todos').then((response) => {
+        console.log('Fetched todos:', response.data) // 取得したデータをログ出力
+        setTodos(response.data)
+      })
+    }
+  }, [isLoggedIn, navigate])
 
   const addTodo = () => {
     axios
