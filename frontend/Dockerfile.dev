@@ -1,0 +1,10 @@
+FROM node:14-alpine
+
+WORKDIR /src
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+COPY . ./
+
+# 開発用にホットリロードを有効化
+CMD ["npm", "start"]
