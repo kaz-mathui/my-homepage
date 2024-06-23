@@ -6,6 +6,7 @@ services:
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
+      - ./frontend/nginx.prod.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
     depends_on:

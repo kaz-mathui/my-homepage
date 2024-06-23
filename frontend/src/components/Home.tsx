@@ -69,7 +69,7 @@ const Home: React.FC = () => {
   return (
     <Container>
       <Header>
-        <h1>ホーム田中ページ</h1>
+        <h1>ホームページ</h1>
       </Header>
       <Main>
         {isLoggedIn ? (
