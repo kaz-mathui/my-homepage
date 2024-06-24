@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { TodoType } from '../types/Todo'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import api from '../api'
+import { TodoType } from '../types/Todo'
 
 const Todo: React.FC = () => {
   const [todos, setTodos] = useState<TodoType[]>([])
@@ -14,33 +14,42 @@ const Todo: React.FC = () => {
     if (!isLoggedIn) {
       navigate('/login')
     } else {
-      axios.get<TodoType[]>('/api/todos').then((response) => {
-        console.log('Fetched todos:', response.data) // 取得したデータをログ出力
-        setTodos(response.data)
-      })
+      api
+        .get<TodoType[]>('/api/todos')
+        .then((response) => {
+          setTodos(response.data)
+        })
+        .catch((error) => {
+          console.error('Error fetching todos:', error)
+        })
     }
   }, [isLoggedIn, navigate])
 
   const addTodo = () => {
-    axios
+    api
       .post<TodoType>('/api/todos', { task, completed: false })
       .then((response) => {
         setTodos([...todos, response.data])
         setTask('')
       })
+      .catch((error) => {
+        console.error('Error adding todo:', error)
+      })
   }
 
   const toggleTodo = (ID: number) => {
-    console.log(`Toggling todo with id: ${ID}`) // ここでidをログに出力
     const todo = todos.find((todo) => todo.ID === ID)
     if (todo) {
-      axios
+      api
         .put<TodoType>(`/api/todos/${ID}`, {
           ...todo,
           completed: !todo.completed
         })
         .then((response) => {
           setTodos(todos.map((t) => (t.ID === ID ? response.data : t)))
+        })
+        .catch((error) => {
+          console.error('Error toggling todo:', error)
         })
     }
   }
@@ -55,23 +64,20 @@ const Todo: React.FC = () => {
       />
       <button onClick={addTodo}>Add</button>
       <ul>
-        {todos.map((todo) => {
-          console.log('Rendering todo:', todo.ID) // 各todoアイテムをログ出力
-          return (
-            <li key={todo.ID}>
-              <span
-                style={{
-                  textDecoration: todo.completed ? 'line-through' : 'none'
-                }}
-              >
-                {todo.task}
-              </span>
-              <button onClick={() => toggleTodo(todo.ID)}>
-                {todo.completed ? 'Undo' : 'Complete'}
-              </button>
-            </li>
-          )
-        })}
+        {todos.map((todo) => (
+          <li key={todo.ID}>
+            <span
+              style={{
+                textDecoration: todo.completed ? 'line-through' : 'none'
+              }}
+            >
+              {todo.task}
+            </span>
+            <button onClick={() => toggleTodo(todo.ID)}>
+              {todo.completed ? 'Undo' : 'Complete'}
+            </button>
+          </li>
+        ))}
       </ul>
     </div>
   )

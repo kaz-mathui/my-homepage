@@ -1,20 +1,22 @@
 package handlers
 
 import (
-    "backend/database"
-    "backend/models"
-    "net/http"
-    "os"
-    "time"
+	"backend/database"
+	"backend/models"
+	"net/http"
+	"os"
+	"time"
 
-    "github.com/dgrijalva/jwt-go"
-    "github.com/gin-gonic/gin"
-    "golang.org/x/crypto/bcrypt"
-    "log"
+	"log"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func generateToken(user models.User) (string, error) {
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+        "userID": user.ID,  // userIDを含める
         "username": user.Username,
         "exp":      time.Now().Add(time.Hour * 72).Unix(),
     })
@@ -26,6 +28,7 @@ func generateToken(user models.User) (string, error) {
     }
     return tokenString, nil
 }
+
 
 func LoginHandler(c *gin.Context) {
     var loginDetails struct {
